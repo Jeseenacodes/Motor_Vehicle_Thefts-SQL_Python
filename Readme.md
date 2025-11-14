@@ -9,6 +9,53 @@
 
 Exploratory data analysis (EDA) project investigating **when**, **what**, and **where** vehicles are stolen, using SQL and Python visualizations. This project answers real-world analytical questions that mirror the workflow of a **Data analyst**.
 
+---
+
+<details>
+<summary><strong> Data Dictionary (Click to Expand)</strong></summary>
+
+<br>
+
+## 🔹 **stolen_vehicles Table**
+
+| Field          | Description                            |
+| -------------- | -------------------------------------- |
+| `vehicle_id`   | Unique ID of a stolen vehicle          |
+| `vehicle_type` | Type of vehicle                        |
+| `make_id`      | Matches `make_id` in **make_details**  |
+| `model_year`   | Model year of the vehicle              |
+| `vehicle_desc` | Description of the vehicle             |
+| `color`        | Color of the vehicle                   |
+| `date_stolen`  | Date the vehicle was stolen (MM/DD/YY) |
+| `location_id`  | Matches `location_id` in **locations** |
+
+---
+
+## 🔹 **make_details Table**
+
+| Field       | Description                          |
+| ----------- | ------------------------------------ |
+| `make_id`   | Unique ID of the make                |
+| `make_name` | Name of the make                     |
+| `make_type` | Category of make (Standard / Luxury) |
+
+---
+
+## 🔹 **locations Table**
+
+| Field         | Description                         |
+| ------------- | ----------------------------------- |
+| `location_id` | Unique ID of the region             |
+| `region`      | Name of the region                  |
+| `country`     | Country where the region is located |
+| `population`  | Population of the region            |
+| `density`     | Population density (people per km²) |
+
+---
+
+</details>
+
+
 ## Project Objectives
 
 ### **Objective 1 — Identify *when* vehicles are stolen**
