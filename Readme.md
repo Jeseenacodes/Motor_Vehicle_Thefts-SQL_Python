@@ -1,4 +1,10 @@
 
+![MySQL](https://img.shields.io/badge/MySQL-005C84?logo=mysql&logoColor=white)
+![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C?logo=python&logoColor=white)
+![Data Visualization](https://img.shields.io/badge/Data%20Visualization-grey?style=flat&logo=databricks&logoColor=white)
+![Status: Completed](https://img.shields.io/badge/Status-Completed-brightgreen)
+
+
 # Motor Vehicle Theft Analysis — SQL + Python Project
 
 Xxploratory data analysis (EDA) project investigating **when**, **what**, and **where** vehicles are stolen, using SQL and Python visualizations. This project answers real-world analytical questions that mirror the workflow of a **Data analyst**.
@@ -120,6 +126,9 @@ This project demonstrates my ability to:
 ## Credits
 
 Dataset: Provided as part of training/education from Maven Analytics
-Analysis & Report: Jeseena Parveen K
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/jeseena-parveen-k/?skipRedirect=true)
+
+Analysis & Report: ![Jeseena Parveen K Badge](https://img.shields.io/badge/JeseenaParveenK-Data%20Analyst-pink?style=flat) [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?logo=linkedin&logoColor=white&style=flat)](https://www.linkedin.com/in/jeseena-parveen-k/?skipRedirect=true)
+
+
+
 
