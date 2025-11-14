@@ -15,7 +15,7 @@ Xxploratory data analysis (EDA) project investigating **when**, **what**, and **
 
 Analyzed date-related fields to understand theft patterns.
 
-1. Number of vehicles stolen **each year**
+1. Number of vehicles stolen each year
 
 ```sql
 SELECT 
@@ -24,14 +24,13 @@ YEAR(date_stolen) AS 'Year'
 FROM stolen_vehicles
 GROUP BY Year
 ```
-**Query Output: Number of Vehicles Stolen by Year**
-
+Query Output: 
 | Number of Vehicles | Year |
 |--------------------|------|
 | 1668               | 2021 |
 | 2885               | 2022 |
 
-2. Number of vehicles stolen **each month**
+2. Number of vehicles stolen each month
 
 ```sql
 SELECT
@@ -42,8 +41,7 @@ FROM stolen_vehicles
 GROUP BY MONTH(date_stolen), MONTHNAME(date_stolen)
 ORDER BY Number_of_Vehicles_Stolen;
 ```
-**Query Output: Number of Vehicles Stolen by Month**
-
+Query Output: 
 | Number of Vehicles | Month | Month Name |
 |--------------------|--------|------------|
 | 329                | 4      | April      |
@@ -54,7 +52,7 @@ ORDER BY Number_of_Vehicles_Stolen;
 | 560                | 11     | November   |
 | 464                | 10     | October    |
 
-3. Number of vehicles stolen **each day of the week**
+3. Number of vehicles stolen each day of the week
 
 ```sql
 SELECT 
@@ -64,7 +62,6 @@ FROM stolen_vehicles
 GROUP BY DAYOFWEEK(date_stolen), DAYNAME(date_stolen)
 ORDER BY  DAYOFWEEK(date_stolen) ;
 ```
-
 
 4. Replaced numeric weekday with full names
 
@@ -95,8 +92,7 @@ GROUP BY Day_Number, Day_Name
 ORDER BY Day_Number;
 ```
 
-**Query Output: Number of Vehicles Stolen Each Day of the Week**
-
+Query Output: Number of Vehicles Stolen Each Day of the Week
 | Number of Vehicles | Day Number | Day Name   |
 |--------------------|------------|------------|
 | 595                | 1          | Sunday     |
@@ -132,8 +128,7 @@ SELECT
 GROUP BY vehicle_type
 ORDER BY Avg_Car_age ;
 ```
-**Query Output: Average Age of Stolen Vehicles by Vehicle Type**
-
+Query Output: 
 | Avg Vehicle Age (Years) | Vehicle Type              |
 |--------------------------|---------------------------|
 | 4.00                     | Mobile Machine            |
@@ -192,8 +187,7 @@ GROUP BY s.vehicle_type, m.make_type
 ORDER BY s.vehicle_type, m.make_type;
 
 ```
-**Query Output: Luxury vs Standard Percentage by Vehicle Type**
-
+Query Output: 
 | Vehicle Type            | % Luxury | % Standard |
 |-------------------------|----------|------------|
 | Trailer                 | 0.00     | 100.00     |
@@ -256,7 +250,7 @@ WHERE vehicle_type IN (SELECT vehicle_type FROM top_10types)
 GROUP BY vehicle_type
 ORDER BY SUM(1) DESC;
 ```
-**Query Output:**
+Query Output:
 
 | Vehicle Type      | Silver | White | Black | Blue | Red | Gray | Green | Other |
 |-------------------|--------|-------|-------|------|-----|------|--------|-------|
@@ -289,8 +283,7 @@ LEFT JOIN locations AS l on l.location_id = s.location_id
 GROUP BY l.region
 ORDER BY COUNT(s.vehicle_id) DESC; 
 ```
-**Query Output:**
-
+Query Output:
 | Region                | Number of Vehicles |
 |-----------------------|--------------------|
 | Auckland              | 1638               |
@@ -319,8 +312,7 @@ GROUP BY l.region, l.population, l.density
 ORDER BY COUNT(s.vehicle_id) DESC; 
 ```
 
-**Query Output: Region-wise Theft Count with Population & Density**
-
+Query Output: 
 | Region                | Population | Density (per km²) | Number of Vehicles Stolen |
 |-----------------------|------------|--------------------|----------------------------|
 | Auckland              | 1,695,200  | 343.09             | 1638                       |
