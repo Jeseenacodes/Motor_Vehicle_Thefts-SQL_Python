@@ -113,9 +113,54 @@ Explored vehicle-related factors (type, age, luxury, color).
 
 1. Most/least stolen vehicle types
 ```sql
+SELECT 
+    COUNT(vehicle_id) AS Number_of_Vehicles_Stolen,
+    vehicle_type
+    FROM stolen_vehicles
+GROUP BY vehicle_type
+ORDER BY 1 DESC
+LIMIT 1;
 
-
+SELECT 
+    COUNT(vehicle_id) AS Number_of_Vehicles_Stolen,
+    vehicle_type
+    FROM stolen_vehicles
+GROUP BY vehicle_type
+ORDER BY 1 
+LIMIT 1;
+---
+WITH theft_counts AS (
+    SELECT 
+        vehicle_type,
+        COUNT(vehicle_id) AS total_stolen
+    FROM stolen_vehicles
+    GROUP BY vehicle_type
+),
+ranked AS (
+    SELECT 
+        vehicle_type,
+        total_stolen,
+        RANK() OVER (ORDER BY total_stolen DESC) AS rank_highest,
+        RANK() OVER (ORDER BY total_stolen ASC) AS rank_lowest
+    FROM theft_counts
+)
+SELECT 
+    vehicle_type,
+    total_stolen,
+    CASE 
+        WHEN rank_highest = 1 THEN 'Most Stolen'
+        WHEN rank_lowest = 1 THEN 'Least Stolen'
+    END AS category
+FROM ranked
+WHERE rank_highest = 1 OR rank_lowest = 1
+ORDER BY category DESC, total_stolen DESC;
 ```
+Query Output
+| Vehicle Type            | Total Stolen | Category       |
+|-------------------------|--------------|----------------|
+| Stationwagon            | 945          | Most Stolen    |
+| Special Purpose Vehicle | 1            | Least Stolen   |
+| Articulated Truck       | 1            | Least Stolen   |
    
 2. Average age of stolen vehicles by vehicle type
 
