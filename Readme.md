@@ -7,7 +7,7 @@
 
 # Motor Vehicle Theft Analysis — SQL + Python Project
 
-Xxploratory data analysis (EDA) project investigating **when**, **what**, and **where** vehicles are stolen, using SQL and Python visualizations. This project answers real-world analytical questions that mirror the workflow of a **Data analyst**.
+Exploratory data analysis (EDA) project investigating **when**, **what**, and **where** vehicles are stolen, using SQL and Python visualizations. This project answers real-world analytical questions that mirror the workflow of a **Data analyst**.
 
 ## Project Objectives
 
@@ -66,6 +66,7 @@ ORDER BY  DAYOFWEEK(date_stolen) ;
 4. Replaced numeric weekday with full names
 
 ```sql
+SELECT
     COUNT(vehicle_id) AS Number_of_Vehicles_Stolen,
     DAYOFWEEK(date_stolen) AS Day_Number,
     DAYNAME(date_stolen) AS Day_Name
@@ -434,29 +435,6 @@ FROM (
 * Densely populated regions show **higher theft activity**
 * Scatter plot indicates strong correlation between **density → theft**
 * Choropleth map highlights hotspots visually
-
-## Sample SQL Queries
-
-### Vehicles stolen each year
-
-```sql
-SELECT YEAR(date_stolen) AS year,
-       COUNT(*) AS total_stolen
-FROM stolen_vehicles
-GROUP BY YEAR(date_stolen)
-ORDER BY year;
-```
-
-### Most stolen vehicle types
-
-```sql
-SELECT vehicle_type,
-       COUNT(*) AS stolen_count
-FROM stolen_vehicles
-GROUP BY vehicle_type
-ORDER BY stolen_count DESC;
-```
-
 ---
 
 ##  **Key Insights**
