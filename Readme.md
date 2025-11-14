@@ -99,6 +99,28 @@ ORDER BY stolen_count DESC;
 
 ---
 
+##  **Key Insights**
+
+* **Vehicle thefts rose from 1,668 in 2021 to 2,885 in 2022**, marking a significant **73% YoY increase**.
+* The sharp rise suggests **intensifying criminal activity** or **gaps in prevention measures**.
+* Growth is disproportionately high compared to typical year-over-year crime fluctuations, indicating a **systemic issue rather than random variation**.
+* The increase may be linked to factors such as **urban expansion**, **population density changes**, **poor lighting**, or **lack of monitoring in vulnerable areas**.
+* Higher volume in 2022 may indicate **emerging hotspots** that require targeted intervention.
+
+---
+
+## **Recommendations**
+
+* **Enhance surveillance infrastructure** (CCTV, ANPR systems, night lighting) in high-risk zones.
+* **Deploy predictive analysis** to identify theft-prone areas based on historical patterns.
+* **Increase police patrolling** and community policing initiatives to deter offenders.
+* **Encourage public awareness** on vehicle safety — locks, alarms, GPS tracking.
+* **Partner with insurance companies** to promote incentives for vehicle security upgrades.
+* **Conduct deeper analysis** (e.g., time-of-day, location clusters, day-of-week patterns) to guide resource allocation.
+* **Implement rapid-response mechanisms** for repeated hotspots to reduce repeat offenses.
+
+---
+
 ## Visual Examples 
 ![Thefts by Day of Week](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/my_plot.png)
 
@@ -107,7 +129,6 @@ ORDER BY stolen_count DESC;
 ![Region](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap1.png)
 
 ![Plot](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Vehicle%20stolen.png)
-
 
 ---
 
