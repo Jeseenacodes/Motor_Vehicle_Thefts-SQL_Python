@@ -452,15 +452,6 @@ FROM (
 * Densely populated regions show **higher theft activity**
 * Scatter plot indicates strong correlation between **density → theft**
 * Choropleth map highlights hotspots visually
----
-
-##  **Key Insights**
-
-* **Vehicle thefts rose from 1,668 in 2021 to 2,885 in 2022**, marking a significant **73% YoY increase**.
-* The sharp rise suggests **intensifying criminal activity** or **gaps in prevention measures**.
-* Growth is disproportionately high compared to typical year-over-year crime fluctuations, indicating a **systemic issue rather than random variation**.
-* The increase may be linked to factors such as **urban expansion**, **population density changes**, **poor lighting**, or **lack of monitoring in vulnerable areas**.
-* Higher volume in 2022 may indicate **emerging hotspots** that require targeted intervention.
 
 ---
 
