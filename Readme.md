@@ -30,6 +30,8 @@ Query Output:
 | 1668               | 2021 |
 | 2885               | 2022 |
 
+> Insights: Vehicle thefts increased sharply from 1,668 in 2021 to 2,885 in 2022, indicating a 73% rise in reported incidents, suggesting growing theft activity or improved reporting.
+
 2. Number of vehicles stolen each month
 
 ```sql
@@ -52,6 +54,8 @@ Query Output:
 | 560                | 11     | November   |
 | 464                | 10     | October    |
 
+> Vehicle thefts peak in March (1,053 thefts) and dip in April (329 thefts). The first quarter shows the highest theft activity, indicating a seasonal pattern.
+
 3. Number of vehicles stolen each day of the week
 
 ```sql
@@ -62,7 +66,6 @@ FROM stolen_vehicles
 GROUP BY DAYOFWEEK(date_stolen), DAYNAME(date_stolen)
 ORDER BY  DAYOFWEEK(date_stolen) ;
 ```
-
 4. Replaced numeric weekday with full names
 
 ```sql
@@ -103,6 +106,8 @@ Query Output: Number of Vehicles Stolen Each Day of the Week
 | 619                | 5          | Thursday   |
 | 655                | 6          | Friday     |
 | 577                | 7          | Saturday   |
+
+> Thefts are highest on Monday (767) and lowest on Saturday (577). Weekdays show more theft activity than weekends, likely linked to increased vehicle movement.
 
 5. Bar chart of thefts by day of the week
 ![Thefts by Day of Week](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/my_plot.png)
@@ -162,7 +167,9 @@ Query Output
 | Stationwagon            | 945          | Most Stolen    |
 | Special Purpose Vehicle | 1            | Least Stolen   |
 | Articulated Truck       | 1            | Least Stolen   |
-   
+
+> Stationwagons are the most frequently stolen vehicles, with 945 thefts, while Special Purpose Vehicles and Articulated Trucks are the least targeted, with only one theft each.
+
 2. Average age of stolen vehicles by vehicle type
 
 ```sql
@@ -202,6 +209,8 @@ Query Output:
 | 27.82                    | Flat Deck Truck           |
 | 34.67                    | Mobile Home - Light       |
 | 64.00                    | Special Purpose Vehicle   |
+
+> Older vehicles are stolen far more often than newer ones, with Special Purpose Vehicles (64 years) and Mobile Home – Light models (34.67 years) being the most targeted. In contrast, newer vehicles like Mobile Machines (4 years) are stolen much less frequently. This pattern suggests that thieves prefer older vehicles, likely because they have weaker security features and are easier to steal.
 
 3. Luxury vs Standard % by vehicle type
 
@@ -263,6 +272,9 @@ Query Output:
 | Mobile Machine          | 0.00     | 100.00     |
 | *Unknown*               | 9.09     | 90.91      |
 
+> For nearly all vehicle types, standard models account for 95–100% of thefts. The only notable exception is Convertibles, which show a 50% luxury theft rate.
+Overall, thieves target standard, non-premium vehicles, likely due to availability and resale parts value.
+
 4. Pivot table: top 10 vehicle types × top 7 colors (+ Other)
 
 ```sql
@@ -311,6 +323,8 @@ Query Output:
 | Boat Trailer      | 67     | 5     | 3     | 0    | 0   | 0    | 0      | 1     |
 | Trailer - Heavy   | 53     | 9     | 1     | 3    | 0   | 0    | 2      | 10    |
 
+> Silver and White are the most frequently stolen colors across top vehicle types, while Green and Gray are least targeted. This reflects common household and fleet color trends. Stationwagons, Saloons, Hatchbacks, and Trailers consistently account for the highest theft counts across all colors.
+
 5. Heatmap visualization of vehicle type vs color
 ![Vehicle types and colors](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap_1.png)
 
@@ -346,6 +360,8 @@ Query Output:
 | Nelson                | 92                 |
 | Southland             | 26                 |
 
+> Vehicle thefts are heavily urban-focused, with Auckland reporting the highest numbers by a wide margin. Low-population regions like Southland and Nelson show minimal theft activity, highlighting a strong link between population density and theft risk.
+
 2. Merged region theft counts with population + density
 
 ```sql
@@ -375,6 +391,7 @@ Query Output:
 | Nelson                | 54,500     | 129.15             | 92                         |
 | Southland             | 102,400    | 3.28               | 26                         |
 
+> Regions with larger and denser populations tend to see the most vehicle thefts, led by Auckland. However, density alone isn’t enough—Nelson is dense but still reports low thefts, suggesting influences like policing or parking behavior. Rural, low-density regions show the least theft activity overall.
 
 3. Comparison of vehicle types in most vs least dense regions
 ```sql
