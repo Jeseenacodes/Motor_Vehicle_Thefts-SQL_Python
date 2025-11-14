@@ -100,14 +100,14 @@ ORDER BY stolen_count DESC;
 ---
 
 ## Visual Examples 
+![Thefts by Day of Week](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/my_plot.png)
 
- plots here, e.g.:
+![Vehicle types and colors](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap_1.png)
 
-```
-![Thefts by Day of Week](visuals/theft_by_day.png)
-![Heatmap](visuals/heatmap_types_colors.png)
-![Region Map](visuals/region_choropleth.png)
-```
+![Region](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap1.png)
+
+![Plot](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Vehicle%20stolen.png)
+
 
 ---
 
