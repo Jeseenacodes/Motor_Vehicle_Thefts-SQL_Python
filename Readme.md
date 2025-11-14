@@ -16,30 +16,353 @@ Xxploratory data analysis (EDA) project investigating **when**, **what**, and **
 Analyzed date-related fields to understand theft patterns.
 
 1. Number of vehicles stolen **each year**
-2. Number of vehicles stolen **each month**
-3. Number of vehicles stolen **each day of the week**
-4. Replaced numeric weekday with full names
-5. Bar chart of thefts by day of the week
 
+```sql
+SELECT 
+COUNT(vehicle_id) AS 'Number of Vehicles Stolen',
+YEAR(date_stolen) AS 'Year'
+FROM stolen_vehicles
+GROUP BY Year
+```
+**Query Output: Number of Vehicles Stolen by Year**
+
+| Number of Vehicles | Year |
+|--------------------|------|
+| 1668               | 2021 |
+| 2885               | 2022 |
+
+2. Number of vehicles stolen **each month**
+
+```sql
+SELECT
+  COUNT(vehicle_id) AS Number_of_Vehicles_Stolen,
+  MONTH(date_stolen)     AS Month,
+  MONTHNAME(date_stolen) AS Month_Name
+FROM stolen_vehicles
+GROUP BY MONTH(date_stolen), MONTHNAME(date_stolen)
+ORDER BY Number_of_Vehicles_Stolen;
+```
+**Query Output: Number of Vehicles Stolen by Month**
+
+| Number of Vehicles | Month | Month Name |
+|--------------------|--------|------------|
+| 329                | 4      | April      |
+| 644                | 12     | December   |
+| 763                | 2      | February   |
+| 740                | 1      | January    |
+| 1053               | 3      | March      |
+| 560                | 11     | November   |
+| 464                | 10     | October    |
+
+3. Number of vehicles stolen **each day of the week**
+
+```sql
+SELECT 
+COUNT(vehicle_id) AS Number_of_Vehicles_Stolen,
+DAYOFWEEK(date_stolen) AS Day
+FROM stolen_vehicles
+GROUP BY DAYOFWEEK(date_stolen), DAYNAME(date_stolen)
+ORDER BY  DAYOFWEEK(date_stolen) ;
+```
+
+
+4. Replaced numeric weekday with full names
+
+```sql
+    COUNT(vehicle_id) AS Number_of_Vehicles_Stolen,
+    DAYOFWEEK(date_stolen) AS Day_Number,
+    DAYNAME(date_stolen) AS Day_Name
+FROM stolen_vehicles
+GROUP BY Day_Number, Day_Name
+ORDER BY Day_Number;
+```
+
+```sql
+SELECT 
+    COUNT(vehicle_id) AS Number_of_Vehicles_Stolen,
+    DAYOFWEEK(date_stolen) AS Day_Number,
+    CASE DAYOFWEEK(date_stolen)
+        WHEN 1 THEN 'Sunday'
+        WHEN 2 THEN 'Monday'
+        WHEN 3 THEN 'Tuesday'
+        WHEN 4 THEN 'Wednesday'
+        WHEN 5 THEN 'Thursday'
+        WHEN 6 THEN 'Friday'
+        WHEN 7 THEN 'Saturday'
+    END AS Day_Name
+FROM stolen_vehicles
+GROUP BY Day_Number, Day_Name
+ORDER BY Day_Number;
+```
+
+**Query Output: Number of Vehicles Stolen Each Day of the Week**
+
+| Number of Vehicles | Day Number | Day Name   |
+|--------------------|------------|------------|
+| 595                | 1          | Sunday     |
+| 767                | 2          | Monday     |
+| 711                | 3          | Tuesday    |
+| 629                | 4          | Wednesday  |
+| 619                | 5          | Thursday   |
+| 655                | 6          | Friday     |
+| 577                | 7          | Saturday   |
+
+5. Bar chart of thefts by day of the week
+![Thefts by Day of Week](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/my_plot.png)
+
+---
 ### **Objective 2 — Identify *which* vehicles are likely to be stolen**
 
 Explored vehicle-related factors (type, age, luxury, color).
 
 1. Most/least stolen vehicle types
-2. Average age of stolen vehicles by vehicle type
-3. Luxury vs Standard % by vehicle type
-4. Pivot table: top 10 vehicle types × top 7 colors (+ Other)
-5. Heatmap visualization of vehicle type vs color
+```sql
 
+
+```
+   
+2. Average age of stolen vehicles by vehicle type
+
+```sql
+SELECT 
+    ROUND(AVG(YEAR(date_stolen) - model_year),2) AS Avg_Car_age,
+    vehicle_type
+    FROM stolen_vehicles
+    WHERE vehicle_type IS NOT NULL
+GROUP BY vehicle_type
+ORDER BY Avg_Car_age ;
+```
+**Query Output: Average Age of Stolen Vehicles by Vehicle Type**
+
+| Avg Vehicle Age (Years) | Vehicle Type              |
+|--------------------------|---------------------------|
+| 4.00                     | Mobile Machine            |
+| 7.00                     | Tractor                   |
+| 7.48                     | Moped                     |
+| 9.55                     | Roadbike                  |
+| 10.50                    | Cab and Chassis Only      |
+| 10.60                    | All Terrain Vehicle       |
+| 11.41                    | Trailer                   |
+| 11.46                    | Trailer - Heavy           |
+| 13.28                    | Boat Trailer              |
+| 14.67                    | Light Bus                 |
+| 15.00                    | Articulated Truck         |
+| 16.27                    | Hatchback                 |
+| 17.82                    | Utility                   |
+| 19.05                    | Saloon                    |
+| 19.21                    | Stationwagon              |
+| 19.44                    | Light Van                 |
+| 20.50                    | Trail Bike                |
+| 22.00                    | Sports Car                |
+| 22.57                    | Heavy Van                 |
+| 22.67                    | Convertible               |
+| 23.19                    | Other Truck               |
+| 27.82                    | Caravan                   |
+| 27.82                    | Flat Deck Truck           |
+| 34.67                    | Mobile Home - Light       |
+| 64.00                    | Special Purpose Vehicle   |
+
+3. Luxury vs Standard % by vehicle type
+
+```sql
+SELECT *,
+CASE 
+	WHEN make_type = 'Luxury' THEN 1 ELSE 0 
+    END AS make_type_cat
+FROM make_details
+ORDER BY make_type_cat DESC;
+
+
+SELECT
+    s.vehicle_type,
+    ROUND(100 * SUM(CASE WHEN m.make_type = 'Luxury' THEN 1 ELSE 0 END) / COUNT(*), 2) AS Luxury_Percent,
+    ROUND(100 * SUM(CASE WHEN m.make_type = 'Standard' THEN 1 ELSE 0 END) / COUNT(*), 2) AS Standard_Percent
+FROM stolen_vehicles AS s
+JOIN make_details AS m ON s.make_id = m.make_id
+GROUP BY s.vehicle_type;
+
+-- Pivot style
+SELECT
+    s.vehicle_type,
+    m.make_type,
+    ROUND(100 * COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY s.vehicle_type), 2) AS Percent
+FROM stolen_vehicles AS s
+JOIN make_details AS m ON s.make_id = m.make_id
+GROUP BY s.vehicle_type, m.make_type
+ORDER BY s.vehicle_type, m.make_type;
+
+```
+**Query Output: Luxury vs Standard Percentage by Vehicle Type**
+
+| Vehicle Type            | % Luxury | % Standard |
+|-------------------------|----------|------------|
+| Trailer                 | 0.00     | 100.00     |
+| Boat Trailer            | 0.00     | 100.00     |
+| Roadbike                | 1.35     | 98.65      |
+| Moped                   | 0.00     | 100.00     |
+| Trailer - Heavy         | 0.00     | 100.00     |
+| Caravan                 | 0.00     | 100.00     |
+| Hatchback               | 3.26     | 96.74      |
+| Saloon                  | 12.93    | 87.07      |
+| Stationwagon            | 3.70     | 96.30      |
+| Tractor                 | 0.00     | 100.00     |
+| Trail Bike              | 0.00     | 100.00     |
+| Light Van               | 1.30     | 98.70      |
+| All Terrain Vehicle     | 0.00     | 100.00     |
+| Utility                 | 0.21     | 99.79      |
+| Other Truck             | 0.00     | 100.00     |
+| Sports Car              | 22.50    | 77.50      |
+| Flat Deck Truck         | 0.00     | 100.00     |
+| Light Bus               | 0.00     | 100.00     |
+| Mobile Home - Light     | 0.00     | 100.00     |
+| Convertible             | 50.00    | 50.00      |
+| Heavy Van               | 14.29    | 85.71      |
+| Special Purpose Vehicle | 0.00     | 100.00     |
+| Articulated Truck       | 0.00     | 100.00     |
+| Cab and Chassis Only    | 0.00     | 100.00     |
+| Mobile Machine          | 0.00     | 100.00     |
+| *Unknown*               | 9.09     | 90.91      |
+
+4. Pivot table: top 10 vehicle types × top 7 colors (+ Other)
+
+```sql
+WITH top_10types AS (
+    SELECT vehicle_type
+    FROM stolen_vehicles
+    GROUP BY vehicle_type
+    ORDER BY COUNT(*) DESC
+    LIMIT 10
+),
+top_7colors AS (
+    SELECT color
+    FROM stolen_vehicles
+    GROUP BY color
+    ORDER BY COUNT(*) DESC
+    LIMIT 7
+)
+-- Final pivot table
+SELECT 
+    vehicle_type,
+    SUM(CASE WHEN color = 'Silver' THEN 1 ELSE 0 END) AS Silver,
+    SUM(CASE WHEN color = 'White' THEN 1 ELSE 0 END) AS White,
+    SUM(CASE WHEN color = 'Black' THEN 1 ELSE 0 END) AS Black,
+    SUM(CASE WHEN color = 'Blue' THEN 1 ELSE 0 END) AS Blue,
+    SUM(CASE WHEN color = 'Red' THEN 1 ELSE 0 END) AS Red,
+    SUM(CASE WHEN color = 'Gray' THEN 1 ELSE 0 END) AS Gray,
+    SUM(CASE WHEN color = 'Green' THEN 1 ELSE 0 END) AS Green,
+    SUM(CASE WHEN color NOT IN (SELECT color FROM top_7colors) THEN 1 ELSE 0 END) AS Other_Colors
+FROM stolen_vehicles
+WHERE vehicle_type IN (SELECT vehicle_type FROM top_10types)
+GROUP BY vehicle_type
+ORDER BY SUM(1) DESC;
+```
+**Query Output:**
+
+| Vehicle Type      | Silver | White | Black | Blue | Red | Gray | Green | Other |
+|-------------------|--------|-------|-------|------|-----|------|--------|-------|
+| Stationwagon      | 223    | 159   | 141   | 142  | 84  | 0    | 59     | 53    |
+| Saloon            | 226    | 160   | 99    | 125  | 75  | 0    | 52     | 43    |
+| Hatchback         | 172    | 114   | 76    | 104  | 58  | 0    | 24     | 50    |
+| Trailer           | 399    | 21    | 29    | 17   | 9   | 0    | 22     | 12    |
+| Utility           | 71     | 183   | 36    | 46   | 45  | 0    | 38     | 15    |
+| Roadbike          | 17     | 42    | 105   | 38   | 51  | 0    | 12     | 21    |
+| Moped             | 8      | 25    | 85    | 18   | 34  | 0    | 1      | 13    |
+| Light Van         | 19     | 104   | 0     | 5    | 7   | 0    | 6      | 6     |
+| Boat Trailer      | 67     | 5     | 3     | 0    | 0   | 0    | 0      | 1     |
+| Trailer - Heavy   | 53     | 9     | 1     | 3    | 0   | 0    | 2      | 10    |
+
+5. Heatmap visualization of vehicle type vs color
+![Vehicle types and colors](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap_1.png)
+
+---
 ### **Objective 3 — Identify *where* vehicles are stolen**
 
 Analyzed theft patterns across regions using population and density data.
 
 1. Number of stolen vehicles in each region
+```sql
+SELECT
+	l.region,
+	COUNT(s.vehicle_id) as 'Number_of_Vehicles_Stolen'
+FROM stolen_vehicles AS s
+LEFT JOIN locations AS l on l.location_id = s.location_id
+GROUP BY l.region
+ORDER BY COUNT(s.vehicle_id) DESC; 
+```
+**Query Output:**
+
+| Region                | Number of Vehicles |
+|-----------------------|--------------------|
+| Auckland              | 1638               |
+| Canterbury            | 660                |
+| Bay of Plenty         | 446                |
+| Wellington            | 420                |
+| Waikato               | 371                |
+| Northland             | 234                |
+| Gisborne              | 176                |
+| Otago                 | 139                |
+| Manawatū-Whanganui    | 139                |
+| Taranaki              | 112                |
+| Hawke's Bay           | 100                |
+| Nelson                | 92                 |
+| Southland             | 26                 |
+
 2. Merged region theft counts with population + density
+
+```sql
+SELECT
+	l.region, l.population, l.density,
+	COUNT(s.vehicle_id) as 'Number_of_Vehicles_Stolen'
+FROM stolen_vehicles AS s
+LEFT JOIN locations AS l on l.location_id = s.location_id
+GROUP BY l.region, l.population, l.density
+ORDER BY COUNT(s.vehicle_id) DESC; 
+```
+
+**Query Output: Region-wise Theft Count with Population & Density**
+
+| Region                | Population | Density (per km²) | Number of Vehicles Stolen |
+|-----------------------|------------|--------------------|----------------------------|
+| Auckland              | 1,695,200  | 343.09             | 1638                       |
+| Canterbury            | 655,000    | 14.72              | 660                        |
+| Bay of Plenty         | 347,700    | 28.80              | 446                        |
+| Wellington            | 543,500    | 67.52              | 420                        |
+| Waikato               | 513,800    | 21.50              | 371                        |
+| Northland             | 201,500    | 16.11              | 234                        |
+| Gisborne              | 52,100     | 6.21               | 176                        |
+| Otago                 | 246,000    | 7.89               | 139                        |
+| Manawatū-Whanganui    | 258,200    | 11.62              | 139                        |
+| Taranaki              | 127,300    | 17.55              | 112                        |
+| Hawke's Bay           | 182,700    | 12.92              | 100                        |
+| Nelson                | 54,500     | 129.15             | 92                         |
+| Southland             | 102,400    | 3.28               | 26                         |
+
+
 3. Comparison of vehicle types in most vs least dense regions
+```sql
+SELECT region, density, 'Highest' As cat
+FROM (
+    SELECT region, density
+    FROM locations
+    ORDER BY density DESC
+    LIMIT 3
+) AS top3
+UNION
+SELECT region, density, 'Lowest' AS cat
+FROM (
+    SELECT region, density
+    FROM locations
+    ORDER BY density ASC
+    LIMIT 3
+) AS bottom3;
+
+```
+
 4. Scatter plot (Population vs Density) sized by theft count
+![Region](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap1.png)
+
 5. Choropleth map colored by number of stolen vehicles
+![Plot](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Vehicle%20stolen.png)
 
 ---
 
@@ -118,17 +441,6 @@ ORDER BY stolen_count DESC;
 * **Partner with insurance companies** to promote incentives for vehicle security upgrades.
 * **Conduct deeper analysis** (e.g., time-of-day, location clusters, day-of-week patterns) to guide resource allocation.
 * **Implement rapid-response mechanisms** for repeated hotspots to reduce repeat offenses.
-
----
-
-## Visual Examples 
-![Thefts by Day of Week](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/my_plot.png)
-
-![Vehicle types and colors](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap_1.png)
-
-![Region](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap1.png)
-
-![Plot](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Vehicle%20stolen.png)
 
 ---
 
