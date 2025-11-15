@@ -157,6 +157,49 @@ Query Output: Number of Vehicles Stolen Each Day of the Week
 > Thefts are highest on Monday (767) and lowest on Saturday (577). Weekdays show more theft activity than weekends, likely linked to increased vehicle movement.
 
 5. Bar chart of thefts by day of the week
+
+```python
+from sqlalchemy import create_engine
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Creating SQLAlchemy connection engine
+engine = create_engine("mysql+pymysql://root:abcd@localhost/stolen_vehicles_db")
+
+query = """
+SELECT 
+    DAYNAME(date_stolen) AS Day_Name,
+    COUNT(vehicle_id) AS Number_of_Vehicles_Stolen
+FROM stolen_vehicles
+GROUP BY Day_Name
+ORDER BY 
+  CASE Day_Name
+    WHEN 'Monday' THEN 1
+    WHEN 'Tuesday' THEN 2
+    WHEN 'Wednesday' THEN 3
+    WHEN 'Thursday' THEN 4
+    WHEN 'Friday' THEN 5
+    WHEN 'Saturday' THEN 6
+    WHEN 'Sunday' THEN 7
+  END;
+"""
+
+df = pd.read_sql(query, engine)
+
+plt.figure(figsize=(6,4))
+plt.bar(df['Day_Name'], df['Number_of_Vehicles_Stolen'], color='green', edgecolor='black')
+plt.title('Number of Vehicles Stolen by Day of Week', fontsize=14)
+plt.xlabel('Day of Week', fontsize=12)
+plt.ylabel('Number of Vehicles Stolen', fontsize=12)
+plt.xticks(rotation=45)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.savefig("my_plot.png", dpi=300)
+plt.show()
+
+```
+
 ![Thefts by Day of Week](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/my_plot.png)
 
 ---
@@ -373,6 +416,58 @@ Query Output:
 > Silver and White are the most frequently stolen colors across top vehicle types, while Green and Gray are least targeted. This reflects common household and fleet color trends. Stationwagons, Saloons, Hatchbacks, and Trailers consistently account for the highest theft counts across all colors.
 
 5. Heatmap visualization of vehicle type vs color
+
+```python
+# SQL query
+query = """
+WITH top_10types AS (
+    SELECT vehicle_type
+    FROM stolen_vehicles
+    GROUP BY vehicle_type
+    ORDER BY COUNT(*) DESC
+    LIMIT 10
+),
+top_7colors AS (
+    SELECT color
+    FROM stolen_vehicles
+    GROUP BY color
+    ORDER BY COUNT(*) DESC
+    LIMIT 7
+)
+SELECT 
+    vehicle_type,
+    SUM(CASE WHEN color = 'Silver' THEN 1 ELSE 0 END) AS Silver,
+    SUM(CASE WHEN color = 'White' THEN 1 ELSE 0 END) AS White,
+    SUM(CASE WHEN color = 'Black' THEN 1 ELSE 0 END) AS Black,
+    SUM(CASE WHEN color = 'Blue' THEN 1 ELSE 0 END) AS Blue,
+    SUM(CASE WHEN color = 'Red' THEN 1 ELSE 0 END) AS Red,
+    SUM(CASE WHEN color = 'Gray' THEN 1 ELSE 0 END) AS Gray,
+    SUM(CASE WHEN color = 'Green' THEN 1 ELSE 0 END) AS Green,
+    SUM(CASE WHEN color NOT IN (SELECT color FROM top_7colors) THEN 1 ELSE 0 END) AS Other_Colors
+FROM stolen_vehicles
+WHERE vehicle_type IN (SELECT vehicle_type FROM top_10types)
+GROUP BY vehicle_type
+ORDER BY SUM(1) DESC;
+"""
+
+df = pd.read_sql(query, engine)
+
+# vehicle_type will become rows
+df.set_index('vehicle_type', inplace=True)
+
+# Creating  heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(df, cmap="YlGnBu", annot=True, fmt=".0f", linewidths=0.5)
+
+# labels and title
+plt.title("Heatmap: Vehicles Stolen by Type and Color", fontsize=14, pad=10)
+plt.xlabel("Vehicle Color", fontsize=10)
+plt.ylabel("Vehicle Type", fontsize=10)
+plt.tight_layout()
+plt.savefig("Heatmap.png", dpi=300)
+plt.show()
+```
+
 ![Vehicle types and colors](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap_1.png)
 
 ---
@@ -461,6 +556,47 @@ FROM (
 ```
 
 4. Scatter plot (Population vs Density) sized by theft count
+```python
+# Read query results
+query = """
+SELECT 
+    l.region,
+    l.population,
+    l.density,
+    COUNT(s.vehicle_id) AS vehicles_stolen
+FROM locations AS l
+LEFT JOIN stolen_vehicles AS s 
+    ON l.location_id = s.location_id
+GROUP BY l.region, l.population, l.density
+ORDER BY vehicles_stolen DESC;
+"""
+df = pd.read_sql(query, engine)
+
+# Creating scatter plot
+plt.figure(figsize=(10, 6))
+sns.scatterplot( data=df, x="density", y="population", size="vehicles_stolen",
+                sizes=(50, 500),   # adjust min/max point size
+    alpha=0.6, hue="vehicles_stolen", palette="YlOrRd", edgecolor="black",
+)
+
+# labels and title
+plt.title("Population vs Density — Bubble Size = Vehicles Stolen", fontsize=14, weight="bold", pad=15)
+plt.xlabel("Population Density", fontsize=12)
+plt.ylabel("Population", fontsize=12)
+
+# region labels 
+for i, row in df.iterrows():
+    plt.text(row["density"], row["population"], row["region"],
+             fontsize=8, ha="center", va="center")
+plt.text(0.5, 0.5, 'Stolen Vehicle Theft  Project',
+         fontsize=30, color='blue', alpha=0.2,
+         ha='center', va='center', rotation=30,
+         transform=plt.gca().transAxes)
+plt.tight_layout()
+plt.savefig("Heatmap1.png", dpi=300)
+plt.show()
+```
+
 ![Region](https://github.com/Jeseenacodes/Motor_Vehicle_Thefts-SQL_Python/blob/main/Charts/Heatmap1.png)
 
 5. Choropleth map colored by number of stolen vehicles
